@@ -1,0 +1,3 @@
+Ford-Fulkerson Algorithm
+
+Through the problem above, several achievements have been attained within the IT context: optimizing to solve a problem using Dijkstra's algorithm on a directed graph to find the shortest path, thus saving time and cost in traversing from the starting point to the destination. Additionally, it has demonstrated the ability to draw vertices, connect them via HTML Canvas, display traversed vertices on the graph, and mark vertices that are confirmed. The functionality of randomly generating graphs and adjusting the speed when finding paths on vertices has also been implemented.
