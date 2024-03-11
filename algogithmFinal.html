@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link tới tệp CSS của Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/theme/monokai.min.css"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!--fontawesome cdn-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+
+    <!-- Thư viện highlight code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.3/mode/javascript/javascript.min.js"></script>
+
+    <!-- Thư viện animation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <title>EDMONDS-KARP</title>
+
+    <style>
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /*Đặt ảnh phía dưới các phần tử khác*/
+        }
+
+        .header {
+            height: auto;
+        }
+
+        .main {
+            height: 700px;
+            margin-top: 100px;
+        }
+
+        .neon-button {
+            width: 120px;
+            height: 35px;
+            font-family: Courier New;
+            font-weight: bold;
+            border: 1px solid rgb(41, 187, 192);
+            border-color: #d02718;
+            border-radius: 11px;
+            font-size: 12px;
+
+            text-align: center;
+            /* background-color: transparent; */
+            cursor: pointer;
+            /* text-shadow: 0px 1px 0px #810e05; */
+            /* background: linear-gradient(rgb(120, 146, 194), #476e9e); */
+            box-shadow: 3px 4px 0px 0px rgb(72, 91, 91);
+        }
+
+        .neon-button:hover,
+        .buttonClass:hover {
+            box-shadow: 0 0 5px #fff, 0 0 6px #fff, 0 0 7px #fff, 0 0 8px rgb(188, 9, 68), 0 0 9px rgb(188, 9, 68), 0 0 10px rgb(188, 9, 68), 0 0 12px rgb(188, 9, 68), 0 0 14px rgb(188, 9, 68);
+            background: rgb(15, 230, 68);
+            color: whitesmoke;
+        }
+
+        .neon-button:active,
+        .buttonClass:active {
+            box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px rgb(188, 9, 68), 0 0 35px rgb(188, 9, 68), 0 0 40px rgb(188, 9, 68), 0 0 50px rgb(188, 9, 68), 0 0 75px rgb(188, 9, 68);
+        }
+
+
+        table,
+        td,
+        th {
+            border: 1px black solid;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        table {
+
+            border-radius: 10px;
+            border-collapse: collapse;
+            background-color: #fff;
+            width: 100%;
+            height: 100%;
+
+        }
+
+        /* TEST */
+
+        .verTex1 {
+            animation: ver1 1s ease-out alternate;
+        }
+
+        @keyframes ver1 {
+            from {
+                color: red;
+            }
+
+            to {
+                left: 1308px;
+                top: 0px;
+            }
+        }
+
+        th:hover,
+        td:hover {
+            border: 5px solid rgb(235, 45, 203);
+            background-color: rgb(219, 205, 217);
+
+        }
+
+
+
+        .cl1-affect {
+            animation: ver1-cl1 500ms 1 alternate;
+        }
+
+        @keyframes ver1-cl1 {
+            0% {
+                border: 2px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            33% {
+                border: 4px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            66% {
+                border: 2px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            100% {
+                border: 4px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+        }
+
+        .content-text {
+            display: inline-flex;
+
+            overflow: scroll;
+            white-space: pre-line;
+
+            text-overflow: ellipsis;
+            height: 100%;
+        }
+
+
+        .btnMenu:hover {
+            background-color: aqua;
+
+        }
+
+
+        /*algorithm*/
+
+
+        .algani {
+            background-color: rgb(225, 25, 11);
+            color: white;
+            animation: aniChange 2s ease-in-out;
+        }
+
+        @keyframes aniChange {
+            0% {
+                background-color: rgb(225, 25, 11);
+            }
+
+            50% {
+                background-color: rgb(127, 167, 18);
+            }
+
+            100% {
+                background-color: rgb(11, 225, 107);
+            }
+        }
+
+        .highlight {
+            background-color: rgb(138, 235, 114);
+        
+        }
+
+        .CodeMirror-scroll{
+            max-height: 100%;
+        }
+    </style>
+</head>
+
+<body >
+    <img src="img/bg1_univer.jpg" alt="bg-image" class="bg-image">
+
+
+    <header class="container mt-3 mb-3">
+
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-3" href="trangchu.html"><img src="img/connection.png" alt=""
+                        width="30px"><span class="navbar-text fs-4 fw-bold
+                            text-light">EDMONDS-KARP</span></a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="gioithieu.html">INTRODUCE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="huongdan.html">DIRECTION</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tailieu.html">DOCUMENTS</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <form class=" mt-auto d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success me-2" type="submit"><i
+                            class="fa-solid fa-magnifying-glass"></i></button>
+
+                    <div class=" d-flex">
+                        <a class=" text text-decoration-none text-secondary fs-6"
+                            href="https://www.facebook.com/honghao.nguyenphan/">Nguyen Phan Hong Hao B2012202 <i
+                                class="fa-solid fa-user-tag text-light fs-6"></i></a>
+                    </div>
+                </form>
+            </div>
+        </nav>
+
+    </header>
+
+    <main class="container" style="margin-top:100px;">
+        <div class="row mt-3" style="width: 100%; height:900px;">
+            <!-- Part 1: button control -->
+            <div class="col-4 col-sm-12 mt-3">
+                <div class="d-flex flex-column  flex-sm-row justify-content-sm-center align-content-sm-center">
+                    <button
+                        class="btn btn-sm text-center text-light bg-secondary   neon-button  p-2 me-2 fs-sm-5 mb-2 flex-fill  "
+                        onClick="randomGraph()">Gandom Graph</button>
+                    <button class=" btn btn-sm neon-button  p-2 me-2 fs-sm-5 mb-2  flex-fill bg-danger"
+                        onClick=mygraph.reset();>Clear All</button>
+                    <button class=" btn btn-sm neon-button  p-2 me-2 fs-sm-5 mb-2   flex-fill bg-secondary"
+                        id="clearAlg" onClick=mygraph.clearAlg();>Clear Alg</button>
+
+                    <button class=" btn btn-sm neon-button   p-2 me-2 fs-sm-5 mb-2  flex-fill bg-secondary " id="saveB"
+                        onClick="save()">Save</button>
+                    <button class=" btn btn-sm neon-button  p-2 me-2 fs-sm-5 mb-2  flex-fill  bg-secondary"
+                        id="restoreB" onClick="restore()">Restore</button>
+
+                    <button class=" btn btn-sm neon-button  p-2 me-2 fs-sm-5 mb-2  flex-fill bg-success" id="playNoA"
+                        onClick="playNoAnimation()">Play</button>
+                    <button class=" btn btn-sm neon-button text-light bg-secondary  p-2 me-2 fs-sm-5 mb-2  flex-fill "
+                        id="pause" onClick="pauseAnimation()">Pause</button>
+                    <button class=" btn btn-sm neon-button text-light bg-secondary  p-2 me-2 fs-sm-5 mb-2  flex-fill "
+                        id="resume" onClick="resumeAnmation()">Resume</button>
+                    <button class=" btn btn-sm neon-button text-light bg-secondary p-2 me-2 fs-sm-5 mb-2  flex-fill "
+                        data-bs-toggle="modal" data-bs-target="#myInstruction">Instruction</button>
+                </div>
+
+                <div class="d-flex flex-column  flex-sm-row justify-content-sm-center align-content-sm-center">
+                    <label for="speedSlider" class="form-label"> <span class="text text-light me-2">Speed</span></label>
+                    <div>
+                        <div id="speedValue"
+                            style="text-align:center; width:35px; height:30px; color:white; border-radius:5px; box-shadow: 0 0 0 rgb(16, 211, 81); background-color: rgb(74, 172, 79); display: none; "
+                            value="">
+
+                        </div>
+                        <input type="range" class="form-range" min="0" max="100" step="1" value="50" id="speedSlider"
+                            style="width:100px">
+                    </div>
+
+                    <div>
+                        <span class="text text-light me-2">Max capactity:</span>
+                        <input type="text" value="8" max="10" mon="6" size="5" style="text-align:center" id="maxCap">
+                    </div>
+
+                    <div>
+                        <span class="text text-light me-2" data-bs-toggle="modal" data-bs-target="#myFullScript">Full
+                            script</span>
+                        <i class="fa-solid fa-book text-light" data-bs-toggle="modal"
+                            data-bs-target="#myFullScript"></i>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column  flex-sm-row justify-content-sm-center align-content-sm-center mt-3 bg-secondary"
+                    style="border: 1px solid black; border-radius: 10px;">
+                    <span class="text text-light me-2">Maximum Flow:</span>
+                    <input style="text-align:center" size=3 value="0" id="MaxFlowText" disabled>
+                    <span class="text text-light me-2">Augmented by:</span>
+
+                    <input style="text-align:center" size=3 value="0" id="aug" disabled>
+
+                    <span class="text text-light me-2">Augmenting Paths:</span>
+
+                    <input style="text-align:center" size=3 value="0" id="path" disabled>
+                </div>
+
+            </div>
+
+
+            <!-- Part 2 graphic and data table -->
+            <div class="col-8 col-sm-12">
+                <!-- ALGORITHM AND SCRIPT -->
+                <div class="row mt-3" >
+                    <div class="col-12 col-sm-6" >
+                        <textarea name="edmondskarp_code" id="code" rows="6"  style="width:100%; height:100%"; >
+///#fordfullkerson
+let sumFlow = 0;
+function fordfullkerson(source, sink) {
+    let Q = new Queue();
+    let sourceVertex = mygraph.vertices[mygraph.getIndex(source)]; ///Vertex object
+    let sinkVertex = mygraph.vertices[mygraph.getIndex(sink)]; ///Vertex object
+    //intit flow
+    for (const element of mygraph.edges) {
+        element.f = 0;
+    }
+    do {
+        ///Buoc 1: Xoa nhan cac dinh va gan nhan cho source
+        ///       1.1 Xoa tat cac cac nhan
+        for (const element of mygraph.vertices) {
+            element.dir = 0;
+            element.flag = 0;
+        }
+        ///       1.2 Gan nhan cho dinh source ( +, 1, oo)
+        sourceVertex.dir = 1;
+        sourceVertex.prev = sourceVertex;
+        sourceVertex.sigma = infi;
+        ///       1.3 Khoi tao QUEUE rong dua source vao QUEUE
+        Q.makeNullQueue();
+        Q.enqueue(sourceVertex);
+        let found = 0; ///Thong bao da gan nhan cho sink chua
+        while (!Q.isEmpty()) {
+            ///Lay head ra ==> x
+            let x = Q.getHead();
+            Q.dequeue();
+            for (let v of mygraph.vertices) {
+                ///Xet gan nhan cho cac dinh gan ke voi x (CUNG THUAN)
+                if (v.dir == 0 && isNeighbors(x, v) && flowLessThanCapacity(x, v)) {
+                    v.dir = 1;
+                    v.prev = x;
+                    v.sigma = min(x.sigma, mygraph.getCapcity(x, v) - mygraph.getFlow(x, v));
+                    Q.enqueue(v);
+                }
+                ///Xet gan nhan cho dinh di den x ( XUNG NGHICH)
+                if (v.dir == 0 && (mygraph.getCapcity(v, x) > 0) && (mygraph.getFlow(v, x) > 0)) {
+                    v.dir = -1;
+                    v.prev = x;
+                    v.sigma = min(x.sigma, mygraph.getFlow(v, x));
+                    Q.enqueue(v);
+                }
+            }
+            ///Neu sink duoc gan nhan tim duoc duong tang luong -> Thoat vong lap
+            if (sinkVertex.dir !== 0) {
+                found = 1;
+                break;
+            }
+        }
+        if (found === 1) {
+            ///Buoc 4 ,5 6, tang luong
+            let x = sinkVertex;
+            let sigma = sinkVertex.sigma;
+            sumFlow += sigma;
+            let blink = new Queue();
+            blink.enqueue(x);
+            while (x !== sourceVertex) {
+                let preV = x.prev;
+                blink.enqueue(preV); ///find the previous vertex
+                if (x.dir == 1) {
+                    mygraph.edges[mygraph.getEdge(preV.id, x.id)].f += sigma;
+                }
+                if (x.dir == -1) {
+                    mygraph.edges[mygraph.getEdge(preV.id, x.id)].f -= sigma;
+                }
+                x = preV;
+            }
+        } else {
+            break; ///Thoat vong lap 
+        }
+    } while (true);
+}                                   
+                        </textarea>
+
+
+                    </div>
+                    <div class="col-12 col-sm-3"
+                        style="max-height: 200px; overflow: auto ; background-color:rgb(241, 235, 242); text-align: left; font-size:10px;">
+                        <!-- <p id="alg-script" class="content-text"
+                                style=" height: 200px;font-size:12px; text-align:left;color: white;text-transform: none;font-size: 10px;">
+                                
+                                    
+                                
+                        </p> -->
+                        <p class="mb-0" id="bkt">Initial f=0</p>
+                        <p class="mb-0" id="bdo">do</p>
+                        <p class="mb-0 ms-2" id="bkt1">Remove the labels of all vertices, assign label to vertex 1, create a new queue, enqueue vertex 1 into the queue.</p>
+                        <p class="mb-0 ms-2" id="blq">Loop while the queue is not empty</p>
+                        <p class="mb-0 ms-4" id="bhx">Traverse through all vertices (v) in the graph</p>
+                        <p class="mb-0 ms-5" id="bct">If it is a forward edge, update, enqueue vertex</p>
+                        <p class="mb-0 ms-5" id="bcn">If it is a backward edge, update, enqueue vertex</p>
+                        <p class="mb-0 ms-4" id="bdt">If the sink vertex is found, exit the loop</p>
+                        <p class="mb-0" id="bwh">while(true)</p>
+                        <p class="mb-0" id="btl">Get sigma= sink.sigma Increase the flow</p>
+                        <p class="mb-0 ms-2" id="btlct">If forward edge +singma</p>
+                        <p class="mb-0 ms-2" id="btlcn">If backward edge -singma</p>
+
+
+                    </div>
+                    <div class="col-12 col-sm-3"
+                        style=" height:200px; border: 1px solid rgb(16, 196, 97); background-color:rgb(16, 93, 176); text-align: center;">
+                        <p><span id="step-script" class="content-text"
+                                style=" height:200px;width:100%;font-size:12px; text-align:center;color: white;text-transform: none; "></span>
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="row mt-3" style="width:100%; height: 500px; ">
+
+                    <div class="col-12 col-sm-4" >
+                        <canvas id="canvas"  width="423px" height="500px"
+                            style="border-right: 1px solid black;background-color: rgb(210, 191, 191); border-radius: 5px; "></canvas>
+
+                            <div id="vertexMenu" class="card"  style="position:absolute;padding: 5px;border-radius: 10px;border: 1px solid plum; display: none;">
+                                <button class="btn btnMenu w-100 fs-6" id="vButton1" onClick=moveVertex();> Move </button> <br>
+                                <button class="btn btnMenu w-100" id="vButton2" onClick=removeVertex();> Delete </button> <br>
+                                <button class="btn btnMenu w-100" id="vButton3" onClick=chooseS();> Source </button> <br>
+                                <button class="btn btnMenu w-100" id="vButton4" onClick=chooseT();> Sink </button> <br>
+                                <button class="btn btnMenu w-100" id="vButton5" onClick=cancel();> Cancel </button> <br>
+                            </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <canvas id="canvas2"  width="423px" height="500px"
+                            style="border-right: 1px solid black; background-color: rgb(135, 226, 157);border-radius: 5px;"></canvas>
+                    </div>
+
+                   
+                    <div class="col-12 col-sm-4">
+                        <table id="tb6ver">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col" style="width:40px;" id="cl1">1</th>
+                                <th scope="col" style="width:40px;" id="cl2">2</th>
+                                <th scope="col" style="width:40px;" id="cl3">3</th>
+                                <th scope="col" style="width:40px;" id="cl4">4</th>
+                                <th scope="col" style="width:40px;" id="cl5">5</th>
+                                <th scope="col" style="width:40px;" id="cl6">6</th>
+                                <th scope="col" id="hd">Queue</th>
+                            </tr>
+
+                            <tr>
+                                <th scope="row" id="l1">REITERATE 1</th>
+                                <td id="rl1v1"></td>
+                                <td id="rl1v2"></td>
+                                <td id="rl1v3"></td>
+                                <td id="rl1v4"></td>
+                                <td id="rl1v5"></td>
+                                <td id="rl1v6"></td>
+                                <td id="rl1hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="l2">REITERATE 2</th>
+                                <td id="rl2v1"></td>
+                                <td id="rl2v2"></td>
+                                <td id="rl2v3"></td>
+                                <td id="rl2v4"></td>
+                                <td id="rl2v5"></td>
+                                <td id="rl2v6"></td>
+                                <td id="rl2hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="l3">REITERATE 3</th>
+                                <td id="rl3v1"></td>
+                                <td id="rl3v2"></td>
+                                <td id="rl3v3"></td>
+                                <td id="rl3v4"></td>
+                                <td id="rl3v5"></td>
+                                <td id="rl3v6"></td>
+                                <td id="rl3hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="l4">REITERATE 4</th>
+                                <td id="rl4v1"></td>
+                                <td id="rl4v2"></td>
+                                <td id="rl4v3"></td>
+                                <td id="rl4v4"></td>
+                                <td id="rl4v5"></td>
+                                <td id="rl4v6"></td>
+                                <td id="rl4hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="l5">REITERATE 5</th>
+                                <td id="rl5v1"></td>
+                                <td id="rl5v2"></td>
+                                <td id="rl5v3"></td>
+                                <td id="rl5v4"></td>
+                                <td id="rl5v5"></td>
+                                <td id="rl5v6"></td>
+                                <td id="rl5hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="l6">REITERATE 6</th>
+                                <td id="rl6v1"></td>
+                                <td id="rl6v2"></td>
+                                <td id="rl6v3"></td>
+                                <td id="rl6v4"></td>
+                                <td id="rl6v5"></td>
+                                <td id="rl6v6"></td>
+                                <td id="rl6hd"></td>
+                            </tr>
+
+
+                        </table>
+
+                        <!--Data table for graph contain 8vertexes : default style='none'-->
+
+                        <table id="tb8ver" style="display:none;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col" style="width:40px;" id="8_cl1">1</th>
+                                <th scope="col" style="width:40px;" id="8_cl2">2</th>
+                                <th scope="col" style="width:40px;" id="8_cl3">3</th>
+                                <th scope="col" style="width:40px;" id="8_cl4">4</th>
+                                <th scope="col" style="width:40px;" id="8_cl5">5</th>
+                                <th scope="col" style="width:40px;" id="8_cl6">6</th>
+                                <th scope="col" style="width:40px;" id="8_cl7">7</th>
+                                <th scope="col" style="width:40px;" id="8_cl8">8</th>
+                                <th scope="col" id="8_hd">QUEUE</th>
+                            </tr>
+
+                            <tr>
+                                <th scope="row" id="8_l1">REITERATE 1</th>
+                                <td id="8_rl1v1"></td>
+                                <td id="8_rl1v2"></td>
+                                <td id="8_rl1v3"></td>
+                                <td id="8_rl1v4"></td>
+                                <td id="8_rl1v5"></td>
+                                <td id="8_rl1v6"></td>
+                                <td id="8_rl1v7"></td>
+                                <td id="8_rl1v8"></td>
+                                <td id="8_rl1hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="8_l2">REITERATE 2</th>
+                                <td id="8_rl2v1"></td>
+                                <td id="8_rl2v2"></td>
+                                <td id="8_rl2v3"></td>
+                                <td id="8_rl2v4"></td>
+                                <td id="8_rl2v5"></td>
+                                <td id="8_rl2v6"></td>
+                                <td id="8_rl2v7"></td>
+                                <td id="8_rl2v8"></td>
+                                <td id="8_rl2hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="8_l3">REITERATE 3</th>
+                                <td id="8_rl3v1"></td>
+                                <td id="8_rl3v2"></td>
+                                <td id="8_rl3v3"></td>
+                                <td id="8_rl3v4"></td>
+                                <td id="8_rl3v5"></td>
+                                <td id="8_rl3v6"></td>
+                                <td id="8_rl3v7"></td>
+                                <td id="8_rl3v8"></td>
+                                <td id="8_rl3hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="8_l4">REITERATE 4</th>
+                                <td id="8_rl4v1"></td>
+                                <td id="8_rl4v2"></td>
+                                <td id="8_rl4v3"></td>
+                                <td id="8_rl4v4"></td>
+                                <td id="8_rl4v5"></td>
+                                <td id="8_rl4v6"></td>
+                                <td id="8_rl4v7"></td>
+                                <td id="8_rl4v8"></td>
+                                <td id="8_rl4hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="8_l5">REITERATE 5</th>
+                                <td id="8_rl5v1"></td>
+                                <td id="8_rl5v2"></td>
+                                <td id="8_rl5v3"></td>
+                                <td id="8_rl5v4"></td>
+                                <td id="8_rl5v5"></td>
+                                <td id="8_rl5v6"></td>
+                                <td id="8_rl5v7"></td>
+                                <td id="8_rl5v8"></td>
+                                <td id="8_rl5hd"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="8_l6">REITERATE 6</th>
+                                <td id="8_rl6v1"></td>
+                                <td id="8_rl6v2"></td>
+                                <td id="8_rl6v3"></td>
+                                <td id="8_rl6v4"></td>
+                                <td id="8_rl6v5"></td>
+                                <td id="8_rl6v6"></td>
+                                <td id="8_rl6v7"></td>
+                                <td id="8_rl6v8"></td>
+                                <td id="8_rl6hd"></td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        
+
+        <div id="edgeMenu" class="card" width="100px" height="100px"  style="position:absolute;padding: 5px;border-radius: 10px;border: 1px solid plum;">
+            <button class="btn btnMenu w-100" id="eButton1" onClick=flip();> flip </button> <br>
+            <button class="btn btnMenu w-100" id="eButton2" onClick=setCapacity();> Set Capacity </button> <br>
+            <button class="btn btnMenu w-100" id="eButton3" onClick=removeEdge();> Delete </button> <br>
+            <button class="btn btnMenu w-100" id="eButton4" onClick=cancel();> Cancel </button> <br>
+        </div>
+
+    </main>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myInstruction">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Instruction to play algorithsm</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body text-left">
+                    &bull; To <u>create</u> a <i><b>Vertex</b></i>, double click anywhere whithin the left canvas.<br />
+                    &bull; To <u>create</u> an <i><b>Edge</b></i>, click on a vertex and drag to another certex not
+                    releasing the mouse.<br />
+                    &bull; Clicking on a Vertex will open vertex menu.<br />
+                    &bull; <i><b>Source</b></i> color is teal, <i><b>Sink</b></i> color is grey.<br />
+                    &bull; Clicking on an Edge will open edge menu.<br />
+                    &bull; To <b>Zoom in/out</b> scroll with mouse wheel within the canvas.<br />
+                    &bull; <b>Random Graph</b> button will generate a random graph.<br />
+                    &bull; <b>Clear all</b> button will delete everything.<br />
+                    &bull; <b>Clear algorithm</b> button will reset algorithm.<br />
+                    &bull; <b>Maximum Capapcity</b> button box will set graph's edges maximum capacity.<br />
+                    &bull; <b>Algorithm</b> select box will set <b>Edmonds-Karp</b> or <b>Capacity-Scaling</b>
+                    algorithm.<br />
+                    &bull; <b>Play Algorithm</b> will animate the algorithm.<br />
+                    &bull; The <b>Speed</b> selector will set the binking speed. (Will update for each augmenting
+                    path). <br />
+                    &bull; <b>Save current graph</b> will save the current graph. <br />
+                    &bull; <b>Restore saved graph</b> will restore the last saved graph.<br />
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myFullScript">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Full script of Ford Fullkerson Algorithm</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body text-left" id="script">
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+
+    <script src="algorithmFinal.js"></script>
+
+
+</body>
+
+</html>
